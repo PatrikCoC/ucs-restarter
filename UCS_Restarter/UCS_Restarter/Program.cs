@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using static System.Console;
 
 namespace UCS_Restarter
 {
@@ -14,15 +15,25 @@ namespace UCS_Restarter
 
         public static void Main(string[] args)
         {
-            //args = new string[]
+            //args = new string[] // Delete the trailing slashes to set UCS Path if you don't want to use CMD
             //{
-            //    @"C:\Users\<Your_UserName\Desktop\UCSPath\FileName.exe"
+            //    @"C:\Users\<UserName>\Desktop\UCS-Path\UCS-Filename.exe"
             //};
+
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine(
+                    @"
+ _   _  ____ ____        ____           _             _            
+| | | |/ ___/ ___|      |  _ \ ___  ___| |_ __ _ _ __| |_ ___ _ __ 
+| | | | |   \___ \ _____| |_) / _ \/ __| __/ _` | '__| __/ _ \ '__|
+| |_| | |___ ___) |_____|  _ <  __/\__ \ || (_| | |  | ||  __/ |   
+ \___/ \____|____/      |_| \_\___||___/\__\__,_|_|   \__\___|_|   
+                  ");
 
             if (args.Length < 1)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("ERROR: You must provide at least 1 argument, for example <FileName>");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("[ERROR]   : You must provide the .exe to use restarter with!");
                 Console.ResetColor();
 
                 Environment.Exit(1);
@@ -30,16 +41,16 @@ namespace UCS_Restarter
 
             if (!File.Exists(args[0]))
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("ERROR: '{0}' does not exists.", args[0]);
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("[ERROR]   : '{0}' does not exists.", args[0]);
                 Console.ResetColor();
 
                 Environment.Exit(1);
             }
 
             Console.Title = "Ultrapowa Clash Server Restarter";
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Ultrapowa Clash Server Restarter");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("[INFO]    : Server Restarter loaded successfully! Infos will be shown here.");
             Console.ResetColor();
 
             UCSProcess = Process.Start(args[0]);
@@ -57,12 +68,12 @@ namespace UCS_Restarter
                     var processes = Process.GetProcesses();
                     for (int i = 0; i < processes.Length; i++)
                     {
-                        if (processes[i].ProcessName == "WerFault")
+                        if (processes[i].ProcessName == "WerFault") // This code required to close the "Filename.exe has stopped working" window.
                         {
-                            if (processes[i].MainWindowTitle.Contains("Republic"))
+                            if (processes[i].MainWindowTitle.Contains("Republic")) // Change "Republic" if you use different filename!!!
                             {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Detected that UCS has crashed. Restarting...");
+                                Console.ForegroundColor = ConsoleColor.DarkRed;
+                                Console.WriteLine("[ERROR]   : SmartDetect has detected that UCS has stopped working / crashed. Restarting...");
                                 processes[i].Kill();
                                 Console.ResetColor();
                             }
@@ -73,8 +84,8 @@ namespace UCS_Restarter
                     // The process will restart if its closed now.
                    if(UCSProcess.HasExited)
                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Restarting UCS because its not responding...");
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine("[ERROR]   : SmartDetect has detected an issue with UCS. Restarting...");
                         //UCSProcess.Kill();
                         Console.ResetColor();
                         UCSProcess = Process.Start(args[0]);
@@ -87,8 +98,8 @@ namespace UCS_Restarter
 
                     if (DateTime.Now >= RestartTime)
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Restarting UCS...");
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine("[INFO]  : Restarting UCS...");
                         UCSProcess.Kill();
                         UCSProcess = Process.Start(args[0]);
 
@@ -100,14 +111,19 @@ namespace UCS_Restarter
                 }
                 catch (Exception ex)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Exception occured while restarting UCS.");
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine("[ERROR]   : Exception occured while restarting UCS.");
                     Console.WriteLine(ex);
                     Console.ResetColor();
                 }
 
                 Thread.Sleep(100);
             }
+        }
+
+        private static void WriteLine(string v)
+        {
+            throw new NotImplementedException();
         }
     }
 }
