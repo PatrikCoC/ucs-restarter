@@ -2,9 +2,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using static System.Console;
 
-namespace UCS_Restarter
+namespace UCSRestarter
 {
     public class Program
     {
@@ -20,15 +19,14 @@ namespace UCS_Restarter
             //    @"C:\Users\<UserName>\Desktop\UCS-Path\UCS-Filename.exe"
             //};
 
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine(
+            WriteLineColor(
                     @"
  _   _  ____ ____        ____           _             _            
 | | | |/ ___/ ___|      |  _ \ ___  ___| |_ __ _ _ __| |_ ___ _ __ 
 | | | | |   \___ \ _____| |_) / _ \/ __| __/ _` | '__| __/ _ \ '__|
 | |_| | |___ ___) |_____|  _ <  __/\__ \ || (_| | |  | ||  __/ |   
  \___/ \____|____/      |_| \_\___||___/\__\__,_|_|   \__\___|_|   
-                  ");
+                  ", ConsoleColor.DarkRed);
 
             if (args.Length < 1)
             {
@@ -48,10 +46,8 @@ namespace UCS_Restarter
                 Environment.Exit(1);
             }
 
-            Console.Title = "Ultrapowa Clash Server Restarter";
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("[INFO]    : Server Restarter loaded successfully! Infos will be shown here.");
-            Console.ResetColor();
+            Console.Title = "UCS Restarter";
+            WriteLineColor("[INFO]   : Server Restarter loaded successfully! Infos will be shown here.", ConsoleColor.DarkGreen);
 
             UCSProcess = Process.Start(args[0]);
             StartTime = DateTime.Now;
@@ -65,48 +61,32 @@ namespace UCS_Restarter
 
                 try
                 {
-                    var processes = Process.GetProcesses();
+                    // TODO: Set "WerFault" according to Operating System language.
+                    var processes = Process.GetProcessesByName("WerFault");
                     for (int i = 0; i < processes.Length; i++)
                     {
-                        if (processes[i].ProcessName == "WerFault") // This code required to close the "Filename.exe has stopped working" window.
+                        if (processes[i].MainWindowTitle.Contains(UCSProcess.MainModule.FileVersionInfo.FileDescription))
                         {
-                            if (processes[i].MainWindowTitle.Contains("Republic")) // Change "Republic" if you use different filename!!!
-                            {
-                                Console.ForegroundColor = ConsoleColor.DarkRed;
-                                Console.WriteLine("[ERROR]   : SmartDetect has detected that UCS has stopped working / crashed. Restarting...");
-                                processes[i].Kill();
-                                Console.ResetColor();
-                            }
+                            // When that WerFault.exe thing closes UCS as well closes. You get this one
+                            WriteLineColor("[ERROR]  : SmartDetect has detected that UCS has stopped working / crashed. Restarting...", ConsoleColor.DarkRed);
+                            processes[i].Kill(); 
                         }
                     }
+
                     UCSProcess.Refresh();
 
-                    // The process will restart if its closed now.
-                   if(UCSProcess.HasExited)
-                   {
-                        Console.ForegroundColor = ConsoleColor.DarkRed;
-                        Console.WriteLine("[ERROR]   : SmartDetect has detected an issue with UCS. Restarting...");
-                        //UCSProcess.Kill();
-                        Console.ResetColor();
-                        UCSProcess = Process.Start(args[0]);
-
-                        StartTime = DateTime.Now;
-                        RestartTime = StartTime.AddMinutes(30); 
-                        RestartCount++;
+                    // The process will restart if its closed.
+                    if (UCSProcess.HasExited)
+                    {
+                        WriteLineColor("[ERROR]  : SmartDetect has detected an issue with UCS. Restarting...", ConsoleColor.DarkRed);
+                        Restart(args[0]);
                         continue;
                     }
 
                     if (DateTime.Now >= RestartTime)
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        Console.WriteLine("[INFO]  : Restarting UCS...");
-                        UCSProcess.Kill();
-                        UCSProcess = Process.Start(args[0]);
-
-                        StartTime = DateTime.Now;
-                        RestartTime = StartTime.AddMinutes(30);
-                        RestartCount++;
-                        Console.ResetColor();
+                        WriteLineColor("[INFO]   : Restarting UCS...", ConsoleColor.DarkGreen);
+                        Restart(args[0]);
                     }
                 }
                 catch (Exception ex)
@@ -121,9 +101,24 @@ namespace UCS_Restarter
             }
         }
 
-        private static void WriteLine(string v)
+        public static void Restart(string path)
         {
-            throw new NotImplementedException();
+            // Make sure it is not dead before killing it because we don't want to kill a dead process.
+            if (!UCSProcess.HasExited)
+                UCSProcess.Kill();
+
+            UCSProcess = Process.Start(path);
+
+            StartTime = DateTime.Now;
+            RestartTime = StartTime.AddMinutes(30);
+            RestartCount++;
+        }
+
+        public static void WriteLineColor(string value, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(value);
+            Console.ResetColor();
         }
     }
 }
