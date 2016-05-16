@@ -16,10 +16,10 @@ namespace UCSRestarter
         public static void Main(string[] args)
         {
             // Set the path to UCS directly here instead of using command prompt.
-            args = new string[]
-            {
-                @"C:\cygwin\home\Ramdass\0.6.4.0\ucs.exe"
-            };
+            //args = new string[]
+            //{
+            //    @"path2ucs.exe"
+            //};
 
             Console.Title = "UCS Restarter - Not Running";
             ConsoleUtils.WriteAsciiArt();
@@ -52,27 +52,6 @@ namespace UCSRestarter
             Restarter.Start();
 
             Thread.Sleep(Timeout.Infinite);
-        }
-
-
-        public static void Restart(string path)
-        {
-            // Make sure it is not dead before killing it because we don't want to kill a dead process.
-            if (!UCSProcess.HasExited)
-                UCSProcess.Kill();
-
-            UCSProcess = Process.Start(path);
-
-            StartTime = DateTime.Now;
-            RestartTime = StartTime.AddMinutes(30);
-            RestartCount++;
-        }
-
-        public static void WriteLineColor(string value, ConsoleColor color)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine(value);
-            Console.ResetColor();
         }
     }
 }
