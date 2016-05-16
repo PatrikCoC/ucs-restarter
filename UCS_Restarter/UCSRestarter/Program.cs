@@ -92,7 +92,7 @@ namespace UCSRestarter
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine("[ERROR]   : Exception occured while restarting UCS.");
+                    Console.WriteLine("[ERROR]   : Exception occurred while restarting UCS.");
                     Console.WriteLine(ex);
                     Console.ResetColor();
                 }
