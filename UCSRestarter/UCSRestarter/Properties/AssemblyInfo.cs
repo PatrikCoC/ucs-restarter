@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("UCS Restarter")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A program that restarts Ultrapowa Clash Servers when they crashes or exits for some reasons.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("UCS Restarter")]

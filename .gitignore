@@ -1,0 +1,8 @@
+# Prefs
+.suo
+
+# Build
+bin/
+obj/
+.vscode/
+.vs/

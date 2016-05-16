@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCS_Restarter", "UCS_Restarter\UCS_Restarter.csproj", "{F2CB29AF-EE2E-403F-A687-1FD35AD6A381}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCSRestarter", "UCSRestarter\UCSRestarter.csproj", "{F2CB29AF-EE2E-403F-A687-1FD35AD6A381}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
