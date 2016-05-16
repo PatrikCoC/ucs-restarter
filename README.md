@@ -11,3 +11,7 @@ make a pull request.
 Main authors of this program: <br>
 [FICTURE7](https://github.com/FICTURE7)<br>
 [PatrikCoC](https://github.com/PatrikCoC)
+
+### TODO
+MOAR STATISTICS
+MOAR CONFIG
