@@ -15,41 +15,48 @@ namespace UCSRestarter
 
         public static void WriteAsciiArt()
         {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(AsciiArt);
+            Console.ResetColor();
+
+            WriteLineInfo("Server Restarter loaded successfully.\n");
+            WriteLineNote("UCS and Restarter executables must be in the same folder!");
+            WriteLineGuide("Restart interval sample: 12:00:00 [hours:minutes:seconds] and can not be more than 24 hours!\n");
         }
 
         public static void WriteLineError(string value)
         {
-            WritePrefix('-', ConsoleColor.DarkRed);
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.Write("error: ");
+            Console.WriteLine("[ERROR]  : " + value);
             Console.ResetColor();
-
-            Console.WriteLine(value);
         }
 
         public static void WriteLineInfo(string value)
         {
-            WritePrefix('*', ConsoleColor.DarkYellow);
-            Console.WriteLine(value);
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("[INFO]   : " + value);
+            Console.ResetColor();
         }
 
-        public static void WriteLineResult(string value)
+        public static void WriteLineGuide(string value)
         {
-            WritePrefix('+', ConsoleColor.DarkGreen);
-            Console.WriteLine(value);
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("[GUIDE]  : " + value);
+            Console.ResetColor();
         }
 
-        private static void WritePrefix(char prefix, ConsoleColor color)
+        public static void WriteLineNote(string value)
         {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("[NOTE]   : " + value);
             Console.ResetColor();
-            Console.Write("[");
+        }
 
-            Console.ForegroundColor = color;
-            Console.Write(prefix);
+        public static void WriteLineInput(string value)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("[INPUT]  : " + value);
             Console.ResetColor();
-
-            Console.Write("] ");
         }
     }
 }

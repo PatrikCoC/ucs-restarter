@@ -14,7 +14,7 @@ namespace UCSRestarter
             _path = path;
         }
 
-        // Determines if the Restarter is running(returns _started).
+        // Determines if the Restarter is running (returns _started).
         public bool Started
         {
             get
@@ -36,7 +36,7 @@ namespace UCSRestarter
         }
 
         // Number of times the application was restarted.  => RestartedTimes.Count
-        //public int RestartCount { get; private set; }
+        public int RestartCount { get { return RestartedTimes.Count; } }
 
         // List of DateTime the application was restarted.
         public List<DateTime> RestartedTimes { get; private set; }
@@ -46,6 +46,9 @@ namespace UCSRestarter
 
         // DateTime of when the Restarter started.
         public DateTime StartTime { get; private set; }
+        
+        // Duration between each restart interval.
+        public TimeSpan RestartInterval { get; set; }
 
         public TimeSpan AverageRunTime
         {
@@ -54,6 +57,7 @@ namespace UCSRestarter
                 // Avoid divide by 0 exception.
                 if (RestartedTimes.Count == 0)
                     return default(TimeSpan);
+
                 return TimeSpan.FromTicks((DateTime.Now - StartTime).Ticks / RestartedTimes.Count);
             }
         }
@@ -73,7 +77,7 @@ namespace UCSRestarter
             _started = true;
             _process = Process.Start(_path);
 
-            NextRestart = DateTime.Now.AddMinutes(30);
+            NextRestart = DateTime.Now.Add(RestartInterval);
             StartTime = DateTime.Now;
 
             _restarterThread = new Thread(HandleRestarting);
@@ -89,10 +93,10 @@ namespace UCSRestarter
                 _started = false;
                 _restarterThread.Abort();
             }
-            else throw new InvalidOperationException("Bro u did not even start the thing.");
+            else throw new InvalidOperationException("Bro-exception occurred!");
         }
 
-        // Handles the restarting of stuff by checking if it crashes and stuff.
+        // Handles the restarting of stuff by checking if it crashes..
         private void HandleRestarting()
         {
             try
@@ -101,16 +105,16 @@ namespace UCSRestarter
                 {
                     try
                     {
-                        var remaining = (NextRestart - DateTime.Now).ToString(@"hh\:mm\:ss\.fff");
-                        var avgRunTime = AverageRunTime.ToString(@"hh\:mm\:ss\.fff");
-                        var title = "UCS Restarter - Remaining: " + remaining + ", Count: " + RestartedTimes.Count + ", Avg Run Time: " + avgRunTime;
+                        var remaining = (NextRestart - DateTime.Now).ToString(@"hh\:mm\:ss\.f");
+                        var avgRunTime = AverageRunTime.ToString(@"hh\:mm\:ss\.f");
+                        var title = "UCS Restarter - Remaining: " + remaining + ", Count: " + RestartedTimes.Count + ", Average Run Time: " + avgRunTime;
                         Console.Title = title;
 
                         // Check if has crashed.
                         var hasCrashed = HasCrashed;
                         if (hasCrashed)
                         {
-                            ConsoleUtils.WriteLineResult("detected that ucs has crashed\n\t-> restarting ucs");
+                            ConsoleUtils.WriteLineError("Detected that UCS has crashed\n\t-> Restarting UCS at " + DateTime.Now);
 
                             // Kill WerFault.exe to cause UCS process to exit.
                             var werFault = GetWerFaultProcess();
@@ -119,10 +123,19 @@ namespace UCSRestarter
                             Restart();
                         }
 
+                        // Check if it has exited.
+                        var hasExited = _process.HasExited;
+                        if (hasExited)
+                        {
+                            ConsoleUtils.WriteLineError("Detected that UCS has exited\n\t-> Restarting UCS at " + DateTime.Now);
+
+                            Restart();
+                        }
+
                         // Check if we have NextRestart time has passed.
                         if (DateTime.Now >= NextRestart)
                         {
-                            ConsoleUtils.WriteLineResult("waited 30 minutes\n\t-> restarting ucs");
+                            ConsoleUtils.WriteLineInfo(RestartInterval + " has passed.\n\t-> Restarting UCS at " + DateTime.Now);
 
                             Restart();
                         }
@@ -132,13 +145,15 @@ namespace UCSRestarter
                     }
                     catch (Exception ex)
                     {
-                        ConsoleUtils.WriteLineError("exception occurred while running -> \n\t" + ex.Message);
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        ConsoleUtils.WriteLineError("Exception occurred while running -> \n\t" + ex.Message);
+                        Console.ResetColor();
                     }
                 }
             }
             catch (ThreadAbortException)
             {
-                // We don't care about those types exceptions.
+                // We don't care about these types of exceptions.
             }
         }
 
@@ -162,7 +177,8 @@ namespace UCSRestarter
 
             _process = Process.Start(_path);
             RestartedTimes.Add(DateTime.Now);
-            NextRestart = DateTime.Now.AddMinutes(30);
+            NextRestart = DateTime.Now.Add(RestartInterval);
+            ConsoleUtils.WriteLineInfo("UCS has restarted successfully at " + DateTime.Now);
         }
     }
 }
