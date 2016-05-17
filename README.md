@@ -1,10 +1,9 @@
 # UCS Restarter
-A simple command line utility that restarts UCS(Ultrapowa Clash Server) when they crashes/stopped working
-and will also restart the server every 30 minutes.
+A simple command line utility that restarts UCS (Ultrapowa Clash Server) when it crashes or stop working. You can also set the restarter's interval.
 
 ### Contributing
-You think the code can be improved at some places?
-Fork it, make changes while following the coding style and
+You think the code could be improved?
+Fork it, make changes following the coding style and
 make a pull request.
 
 ### Authors
@@ -13,5 +12,5 @@ Main authors of this program: <br>
 [PatrikCoC](https://github.com/PatrikCoC)
 
 ### TODO
-MOAR STATISTICS
-MOAR CONFIG
+-More statistic
+-More config
