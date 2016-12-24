@@ -82,6 +82,12 @@ namespace UCSRestarter
                         var read = Console.ReadKey();
                         if (read.Key == ConsoleKey.Enter)
                         {
+                            for (int i = 0; i < 3; i++)
+                            {
+                                ConsoleUtils.DeleteLine();
+                                Console.CursorTop--;
+                            }
+                            Console.CursorTop++;
                             goto Start;
                         }
                         else if (read.Key == ConsoleKey.Spacebar)

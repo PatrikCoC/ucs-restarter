@@ -15,13 +15,7 @@ namespace UCSRestarter
         }
 
         // Determines if the Restarter is running (returns _started).
-        public bool Started
-        {
-            get
-            {
-                return _started;
-            }
-        }
+        public bool Started => _started;
 
         // Determines if the process has crashed.
         public bool HasCrashed
@@ -46,7 +40,7 @@ namespace UCSRestarter
 
         // DateTime of when the Restarter started.
         public DateTime StartTime { get; private set; }
-        
+
         // Duration between each restart interval.
         public TimeSpan RestartInterval { get; set; }
 
@@ -146,7 +140,7 @@ namespace UCSRestarter
                     catch (Exception ex)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkRed;
-                        ConsoleUtils.WriteLineError("Exception occurred while running -> \n\t" + ex.Message);
+                        ConsoleUtils.WriteLineError("Exception occurred while running -> \n\t" + ex);
                         Console.ResetColor();
                     }
                 }

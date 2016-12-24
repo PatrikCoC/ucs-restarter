@@ -58,5 +58,15 @@ namespace UCSRestarter
             Console.Write("[INPUT]  : " + value);
             Console.ResetColor();
         }
+
+        public static void DeleteLine()
+        {
+            Console.CursorLeft = 0;
+
+            var emptyLine = new string(' ', Console.BufferWidth -1);
+            Console.Write(emptyLine);
+
+            Console.CursorLeft = 0;
+        }
     }
 }
